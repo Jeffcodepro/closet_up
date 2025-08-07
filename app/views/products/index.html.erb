@@ -1,0 +1,67 @@
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid d-flex justify-content-between align-items-center w-100 m-3">
+
+    <a class="navbar-brand" href="/">Meu Marketplace</a>
+
+    <div class="mx-auto" style="max-width: 500px; width: 100%;">
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Buscar produtos" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Buscar</button>
+      </form>
+    </div>
+
+    <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
+      <% if user_signed_in? %>
+        <li class="nav-item">
+          <span class="nav-link text-white">Olá, <%= current_user.email %></span>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Minha Conta", edit_user_registration_path, class: "nav-link text-white" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" %>
+        </li>
+      <% else %>
+        <li class="nav-item">
+          <%= link_to "Entrar", new_user_session_path, class: "nav-link text-white" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Criar Conta", new_user_registration_path, class: "nav-link text-white" %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</nav>
+<nav class="navbar navbar-dark bg-secondary py-1">
+  <div class="container-fluid">
+    <ul class="navbar-nav d-flex flex-row w-100 justify-content-between">
+      <% Category.all.each do |category| %>
+        <li class="nav-item">
+          <%= link_to category.title, products_by_category_path(category), class: "nav-link text-white px-2" %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</nav>
+<% if user_signed_in? %>
+  <%= link_to "Adicionar Produto", new_product_path, class: "btn btn-success mb-3" %>
+<% end %>
+<div class="container mt-4">
+<h1>Produtos disponíveis</h1>
+  <div class="row">
+    <% @products.each do |product| %>
+      <div class="col-md-4 mb-4">
+        <div class="card" style="width: 100%;">
+          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="<%= product.title %>">
+          <div class="card-body">
+            <h5 class="card-title"><%= product.title %></h5>
+            <p class="card-text"><%= product.description %></p>
+            <p class="card-text"><%= product.category.title %></p>
+            <p class="card-text"><strong>R$ <%= product.price %></strong></p>
+            <%= link_to "Ver produto", product_path(product), class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
