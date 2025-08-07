@@ -1,40 +1,31 @@
 <div class="container">
-  <h1>Produto</h1>
-
+  <h1>Product</h1>
   <p>
-    <strong>Título:</strong>
+    <strong>Title:</strong>
     <%= @product.title %>
   </p>
-
   <p>
-    <strong>Descrição:</strong>
+    <strong>Description:</strong>
     <%= @product.description %>
   </p>
-
   <p>
-    <strong>Preço:</strong>
+    <strong>Price:</strong>
     <%= number_to_currency(@product.price) %>
   </p>
-
   <p>
     <strong>SKU:</strong>
     <%= @product.sku %>
   </p>
-
   <p>
-    <strong>Categoria:</strong>
+    <strong>Category:</strong>
     <%= @product.category.title %>
   </p>
-
   <p>
-    <strong>Criado em:</strong>
-    <%= @product.created_at.strftime("%d/%m/%Y") %>
+    <strong>Created at:</strong>
+    <%= @product.created_at.strftime("%B %d, %Y") %>
   </p>
-
-  <p>
-    <strong>Atualizado em:</strong>
-    <%= @product.updated_at.strftime("%d/%m/%Y") %>
+  <p>  <strong>Updated at:</strong>
+    <%= @product.updated_at.strftime("%B %d, %Y") %>
   </p>
-
-  <%= link_to 'Editar Produto', edit_product_path(@product), class: 'btn btn-primary' %>
+  <%= link_to 'Edit', edit_product_path(@product), class: 'btn btn-primary' %>
 </div>
