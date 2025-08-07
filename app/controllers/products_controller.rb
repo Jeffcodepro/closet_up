@@ -1,5 +1,6 @@
 class ProductsController < ApplicationController
   before_action :authenticate_user!, only: %i[new create]
+  before_action :set_product, only: %i[show edit update]
 
   def index
     if params[:category_id]
@@ -15,8 +16,7 @@ class ProductsController < ApplicationController
   end
 
   def show
-    @product = Product.find(params[:id])
-    @offers = @product.offers.includes(:user)
+    @offers = @product.offers.includes(:user) if @product.respond_to?(:offers)
   end
 
   def new
@@ -33,9 +33,24 @@ class ProductsController < ApplicationController
     end
   end
 
+  def edit
+  end
+
+  def update
+    if @product.update(product_params)
+      redirect_to @product, notice: "Produto atualizado com sucesso."
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def product_params
     params.require(:product).permit(:title, :description, :sku, :price, :category_id)
+  end
+
+  def set_product
+    @product = Product.find(params[:id])
   end
 end

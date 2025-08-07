@@ -1,2 +1,40 @@
-<h1>Products#show</h1>
-<p>Find me in app/views/products/show.html.erb</p>
+<div class="container">
+  <h1>Produto</h1>
+
+  <p>
+    <strong>Título:</strong>
+    <%= @product.title %>
+  </p>
+
+  <p>
+    <strong>Descrição:</strong>
+    <%= @product.description %>
+  </p>
+
+  <p>
+    <strong>Preço:</strong>
+    <%= number_to_currency(@product.price) %>
+  </p>
+
+  <p>
+    <strong>SKU:</strong>
+    <%= @product.sku %>
+  </p>
+
+  <p>
+    <strong>Categoria:</strong>
+    <%= @product.category.title %>
+  </p>
+
+  <p>
+    <strong>Criado em:</strong>
+    <%= @product.created_at.strftime("%d/%m/%Y") %>
+  </p>
+
+  <p>
+    <strong>Atualizado em:</strong>
+    <%= @product.updated_at.strftime("%d/%m/%Y") %>
+  </p>
+
+  <%= link_to 'Editar Produto', edit_product_path(@product), class: 'btn btn-primary' %>
+</div>
