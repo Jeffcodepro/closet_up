@@ -9,10 +9,12 @@ User.destroy_all
 
 puts "👤 Criando usuário de teste..."
 
-user = User.create!(
-  email: "teste@teste.com",
-  password: "123456"
-)
+users = User.create!([
+  { email: "teste@teste.com",
+  password: "123456" },
+  { email: "user@test.com",
+  password: "78910abc" }
+])
 
 puts "🗂️ Criando categorias..."
 
@@ -31,7 +33,7 @@ puts "🛍️ Criando produtos..."
     description: "Descrição do produto #{i + 1}",
     sku: "SKU#{i + 1}",
     price: rand(50..300),
-    user: user,
+    user: users.sample,
     category: categories.sample
   )
 end
