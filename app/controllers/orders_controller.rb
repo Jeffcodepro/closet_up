@@ -11,7 +11,7 @@ class OrdersController < ApplicationController
       line_items: [{
         quantity: 1,
         price_data: {
-          unit_amount: product.price.to_i,
+          unit_amount: product.price_cents.to_i,
           currency: 'brl',
           product_data: {
             name: product.sku
