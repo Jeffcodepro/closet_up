@@ -1,3 +1,16 @@
 <div class="container mt-5">
   <h1>Edit a product</h1>
+
+  <%= simple_form_for @product do |f| %>
+    <%= f.input :title %>
+    <%= f.input :description %>
+    <%= f.input :sku %>
+    <%= f.input :price %>
+    <%= f.input :category_id, collection: @categories, prompt: "Selecione uma categoria" %>
+    <%= f.input :image, as: :file, label: "Imagem do Produto" %>
+
+    <%= f.button :submit, "Criar Produto", class: "btn btn-primary" %>
+  <% end %>
+</div>
+
 </div>
