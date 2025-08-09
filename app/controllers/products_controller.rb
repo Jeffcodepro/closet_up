@@ -1,6 +1,7 @@
 class ProductsController < ApplicationController
-  before_action :authenticate_user!, only: %i[new create]
-  before_action :set_product, only: %i[show edit update]
+  before_action :authenticate_user!, only: %i[new create edit update destroy]
+  before_action :set_product, only: %i[show edit update destroy]
+  before_action :authorize_user!, only: %i[edit update destroy]
 
   def index
     if params[:category_id]
@@ -26,6 +27,7 @@ class ProductsController < ApplicationController
 
   def create
     @product = current_user.products.build(product_params)
+    @product.user = current_user
     if @product.save
       redirect_to product_path(@product), notice: "Produto criado com sucesso!"
     else
@@ -34,6 +36,11 @@ class ProductsController < ApplicationController
   end
 
   def edit
+  end
+
+  def destroy
+    @product.destroy
+    redirect_to products_path, notice: "Produto excluído com sucesso."
   end
 
   def update
@@ -53,4 +60,11 @@ class ProductsController < ApplicationController
   def set_product
     @product = Product.find(params[:id])
   end
+
+  def authorize_user!
+    unless @product.user == current_user
+      redirect_to products_path, alert: "Você não está autorizado a realizar esta ação."
+    end
+  end 
+
 end
