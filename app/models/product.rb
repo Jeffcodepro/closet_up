@@ -6,6 +6,8 @@ class Product < ApplicationRecord
 
   has_many :offers, dependent: :destroy
   # has_one_attached :image
+  has_many :offers
+  has_many_attached :images
 
   validates :title, presence: true
   validates :description, presence: true

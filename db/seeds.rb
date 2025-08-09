@@ -25,17 +25,17 @@ categories = Category.create!([
   { title: "Acessórios", description: "Relógios, bonés, etc" }
 ])
 
-puts "🛍️ Criando produtos..."
+# puts "🛍️ Criando produtos..."
 
-10.times do |i|
-  Product.create!(
-    title: "Produto #{i + 1}",
-    description: "Descrição do produto #{i + 1}",
-    sku: "SKU#{i + 1}",
-    price_cents: rand(5000..30000),
-    user: users.sample,
-    category: categories.sample
-  )
-end
+# 10.times do |i|
+#   Product.create!(
+#     title: "Produto #{i + 1}",
+#     description: "Descrição do produto #{i + 1}",
+#     sku: "SKU#{i + 1}",
+#     price: rand(50..300),
+#     user: users.sample,
+#     category: categories.sample
+#   )
+# end
 
 puts "✅ Seed finalizado com sucesso!"

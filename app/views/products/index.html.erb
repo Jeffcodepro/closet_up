@@ -16,6 +16,9 @@
           <span class="nav-link text-white">Olá, <%= current_user.email %></span>
         </li>
         <li class="nav-item">
+          <%= link_to "Adicionar Produto", new_product_path, class: "nav-link text-white" %>
+        </li>
+        <li class="nav-item">
           <%= link_to "Minha Conta", edit_user_registration_path, class: "nav-link text-white" %>
         </li>
         <li class="nav-item">
@@ -45,21 +48,18 @@
     </ul>
   </div>
 </nav>
-<% if user_signed_in? %>
-  <%= link_to "Adicionar Produto", new_product_path, class: "btn btn-success mb-3" %>
-<% end %>
 <div class="container mt-4">
 <h1 class="mt-4">Produtos disponíveis</h1>
   <div class="row">
     <% @products.each do |product| %>
       <div class="col-md-4 mb-4">
         <div class="card">
-          <% if product.image.attached? %>
-            <%= cl_image_tag product.image.key, height: 300, width: 200, crop: :fill, class: "card-img-top" %>
+          <% if product.images.attached? %>
+            <%= cl_image_tag product.images.key, height: 300, width: 200, crop: :fill, class: "card-img-top" %>
           <% end %>
           <div class="card-body">
             <h5 class="card-title"><%= product.title %></h5>
-            <p class="card-text"><%= product.description %></p>
+            <p class="card-text description"><%= product.description %></p>
             <p class="card-text"><%= product.category.title %></p>
             <p class="card-text"><strong><%= humanized_money_with_symbol(product.price) %></strong></p>
             <%= link_to "Ver produto", product_path(product), class: "btn btn-primary" %>

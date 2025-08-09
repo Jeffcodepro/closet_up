@@ -7,7 +7,7 @@
     <%= f.input :sku %>
     <%= f.input :price %>
     <%= f.input :category_id, collection: @categories, prompt: "Selecione uma categoria" %>
-    <%= f.input :image, as: :file, label: "Imagem do Produto" %>
+    <%= f.input :images, as: :file, label: "Imagem do Produto" %>
 
     <%= f.button :submit, "Criar Produto", class: "btn btn-primary" %>
   <% end %>
