@@ -32,7 +32,7 @@ puts "🛍️ Criando produtos..."
     title: "Produto #{i + 1}",
     description: "Descrição do produto #{i + 1}",
     sku: "SKU#{i + 1}",
-    price: rand(50..300),
+    price_cents: rand(5000..30000),
     user: users.sample,
     category: categories.sample
   )
