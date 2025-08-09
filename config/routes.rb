@@ -13,6 +13,16 @@ Rails.application.routes.draw do
   patch "/products/:id", to: "products#update"
   delete "/products/:id", to: "products#destroy", as: :delete_product
 
+  # Orders
+  resources :products do
+    resources :orders, only: [:show, :create], shallow: true
+  end
+
+  # Payments
+  resources :orders, only: [:show, :create] do
+    resources :payments, only: :new
+  end
+
   # Filtro por categoria
   get "/products/category/:category_id", to: "products#index", as: :products_by_category
 
@@ -21,4 +31,5 @@ Rails.application.routes.draw do
   post "/products/:product_id/offers", to: "offers#create", as: :product_offers
   get "/offers", to: "offers#index", as: :offers
   get "/offers/:id", to: "offers#show", as: :offer
+
 end

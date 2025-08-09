@@ -1,16 +1,58 @@
-<div class="container">
-  <h1>Product</h1>
-  <p>
-    <strong>Title:</strong>
-    <%= @product.title %>
-  </p>
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container-fluid d-flex justify-content-between align-items-center w-100 m-3">
+
+    <a class="navbar-brand" href="/">Meu Marketplace</a>
+
+    <div class="mx-auto" style="max-width: 500px; width: 100%;">
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Buscar produtos" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Buscar</button>
+      </form>
+    </div>
+
+    <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
+      <% if user_signed_in? %>
+        <li class="nav-item">
+          <span class="nav-link text-white">Olá, <%= current_user.email %></span>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Minha Conta", edit_user_registration_path, class: "nav-link text-white" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "nav-link text-white" %>
+        </li>
+      <% else %>
+        <li class="nav-item">
+          <%= link_to "Entrar", new_user_session_path, class: "nav-link text-white" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Criar Conta", new_user_registration_path, class: "nav-link text-white" %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</nav>
+<nav class="navbar navbar-dark bg-secondary py-1">
+  <div class="container-fluid">
+    <ul class="navbar-nav d-flex flex-row w-100 justify-content-between">
+      <% Category.all.each do |category| %>
+        <li class="nav-item">
+          <%= link_to category.title, products_by_category_path(category), class: "nav-link text-white px-2" %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <h1><%= @product.title %></h1>
   <p>
     <strong>Description:</strong>
     <%= @product.description %>
   </p>
   <p>
     <strong>Price:</strong>
-    <%= number_to_currency(@product.price) %>
+    <%= humanized_money_with_symbol(@product.price) %>
   </p>
   <p>
     <strong>SKU:</strong>
@@ -33,5 +75,14 @@
   <p>  <strong>Updated at:</strong>
     <%= @product.updated_at.strftime("%B %d, %Y") %>
   </p>
-  <%= link_to 'Edit', edit_product_path(@product), class: 'btn btn-primary' %>
+  <% if @product.user == current_user %>
+    <%= link_to 'Edit', edit_product_path(@product), class: 'btn btn-primary' %>
+    <%= link_to 'Delete', product_path(@product), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+  <% else %>
+    <%= form_with url: product_orders_path(@product) do %>
+    <%= hidden_field_tag 'product_id', @product.id %>
+    <%= submit_tag 'Purchase', class: 'btn btn-primary' %>
+    <% end %>
+  <% end %>
+  <%= link_to 'Retornar para produtos', products_path, class: 'btn btn-secondary' %>
 </div>
