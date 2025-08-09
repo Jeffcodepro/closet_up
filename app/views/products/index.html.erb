@@ -32,12 +32,14 @@
     </ul>
   </div>
 </nav>
-<nav class="navbar navbar-dark bg-secondary py-1">
+<nav class="navbar navbar-dark bg-secondary">
   <div class="container-fluid">
-    <ul class="navbar-nav d-flex flex-row w-100 justify-content-between">
+    <ul class="navbar-nav d-flex flex-row w-100 justify-content-between overflow-auto">
       <% Category.all.each do |category| %>
-        <li class="nav-item">
-          <%= link_to category.title, products_by_category_path(category), class: "nav-link text-white px-2" %>
+        <li class="container nav-item text-center">
+          <%= link_to products_by_category_path(category), class: "nav-link text-white px-2" do %>
+            <%= category.title %>
+          <% end %>
         </li>
       <% end %>
     </ul>
@@ -47,12 +49,14 @@
   <%= link_to "Adicionar Produto", new_product_path, class: "btn btn-success mb-3" %>
 <% end %>
 <div class="container mt-4">
-<h1>Produtos disponíveis</h1>
+<h1 class="mt-4">Produtos disponíveis</h1>
   <div class="row">
     <% @products.each do |product| %>
       <div class="col-md-4 mb-4">
-        <div class="card" style="width: 100%;">
-          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="<%= product.title %>">
+        <div class="card">
+          <% if product.image.attached? %>
+            <%= cl_image_tag product.image.key, height: 300, width: 200, crop: :fill, class: "card-img-top" %>
+          <% end %>
           <div class="card-body">
             <h5 class="card-title"><%= product.title %></h5>
             <p class="card-text"><%= product.description %></p>
@@ -61,6 +65,7 @@
             <%= link_to "Ver produto", product_path(product), class: "btn btn-primary" %>
           </div>
         </div>
+
       </div>
     <% end %>
   </div>

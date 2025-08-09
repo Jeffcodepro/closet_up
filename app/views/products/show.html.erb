@@ -21,6 +21,12 @@
     <%= @product.category.title %>
   </p>
   <p>
+    <strong>Image:</strong><br>
+    <% if @product.image.attached? %>
+      <%= image_tag @product.image, width: 300, height: 200, crop: :fill, class: "card-img-top" %>
+    <% end %>
+  </p>
+  <p>
     <strong>Created at:</strong>
     <%= @product.created_at.strftime("%B %d, %Y") %>
   </p>
