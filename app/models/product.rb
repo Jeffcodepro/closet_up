@@ -5,7 +5,7 @@ class Product < ApplicationRecord
   monetize :price_cents
 
   has_many :offers, dependent: :destroy
-  # has_one_attached :image
+  has_one_attached :image
 
   validates :title, presence: true
   validates :description, presence: true
