@@ -7,7 +7,11 @@
     <%= f.input :sku %>
     <%= f.input :price %>
     <%= f.input :category_id, collection: @categories, prompt: "Selecione uma categoria" %>
-    <%= f.input :images, as: :file, label: "Imagem do Produto" %>
+    <%= f.input :size,
+                as: :check_boxes,
+                collection: Product::SIZES,
+                label: "Tamanhos disponíveis" %>
+    <%= f.input :images, as: :file, input_html: { multiple: true, direct_upload: true, accept: "image/*" }, label: "Imagens do Produto" %>
 
     <%= f.button :submit, "Criar Produto", class: "btn btn-primary" %>
   <% end %>
