@@ -1,0 +1,55 @@
+.btn-edit{
+  text-decoration: none;
+  background-color: #DD1E73;
+  color: #ffff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-edit:hover {
+  background-color: #b00d5a;
+}
+
+.btn-delete {
+  text-decoration: none;
+  background-color: #FF4D4D;
+  color: #ffff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-delete:hover {
+  background-color: #cc0000;
+}
+
+.btn-return-to-products {
+  text-decoration: none;
+  background-color: #313332;
+  color: #ffff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-return-to-products:hover {
+  background-color: #1a1a1b;
+}
+
+.btn-add-product {
+  text-decoration: none;
+  background-color: #212529;
+  color: #1EDD88;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border-color: #1EDD88;
+  border-width: 1px;
+  border-style: solid;
+  transition: background-color 0.3s ease;
+}
+
+.btn-add-product:hover {
+  background-color: #1EDD88;
+  color: #000;
+}

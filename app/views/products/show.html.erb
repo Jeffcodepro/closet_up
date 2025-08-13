@@ -6,7 +6,9 @@
     <div class="mx-auto" style="max-width: 500px; width: 100%;">
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Buscar produtos" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Buscar</button>
+        <button class="btn btn-outline-success" type="submit">
+          <i class="bi bi-search"></i>
+        </button>
       </form>
     </div>
 
@@ -16,7 +18,12 @@
           <span class="nav-link text-white">Olá, <%= current_user.email %></span>
         </li>
         <li class="nav-item">
-          <%= link_to "Minha Conta", edit_user_registration_path, class: "nav-link text-white" %>
+          <%= link_to "Adicionar Produto", new_product_path, class: "nav-link btn-add-product" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to edit_user_registration_path, class: "nav-link text-white" do %>
+          <i class="bi bi-person fs-4"></i>
+          <% end %>
         </li>
         <li class="nav-item">
           <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "nav-link text-white" %>
@@ -32,96 +39,110 @@
     </ul>
   </div>
 </nav>
-<nav class="navbar navbar-dark bg-secondary py-1">
+<nav class="navbar navbar-dark bg-secondary">
   <div class="container-fluid">
-    <ul class="navbar-nav d-flex flex-row w-100 justify-content-between">
+    <ul class="navbar-nav d-flex flex-row w-100 justify-content-between overflow-auto">
       <% Category.all.each do |category| %>
-        <li class="nav-item">
-          <%= link_to category.title, products_by_category_path(category), class: "nav-link text-white px-2" %>
+        <li class="container nav-item text-center">
+          <%= link_to products_by_category_path(category), class: "nav-link text-white px-2" do %>
+            <%= category.title %>
+          <% end %>
         </li>
       <% end %>
     </ul>
   </div>
 </nav>
 
-<div class="container mt-4 text-center">
-  <h1><%= @product.title %></h1>
-  <p>
-    <strong>Description:</strong>
-    <%= @product.description %>
-  </p>
-  <p>
-    <strong>Price:</strong>
-    <%= humanized_money_with_symbol(@product.price) %>
-  </p>
-  <p>
-    <strong>SKU:</strong>
-    <%= @product.sku %>
-  </p>
-  <p>
-    <strong>Category:</strong>
-    <%= @product.category.title %>
-  </p>
-  <div class="card h-100">
-    <div id="carouselExampleRide-<%= @product.id %>" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <% @product.images.each_with_index do |image, i| %>
-          <div class="carousel-item <%= 'active' if i.zero? %>">
-            <!-- altura menor: troque para ratio-21x9 se quiser ainda mais baixo -->
-            <div class="ratio ratio-16x9">
-              <%= cl_image_tag image.key, class: "d-block w-100 h-100", style: "object-fit: cover;", alt: @product.title %>
+<div class="container product-show">
+  <div class="product-image-container">
+    <div class="card h-100">
+      <div id="carouselExampleRide-<%= @product.id %>" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <% @product.images.each_with_index do |image, i| %>
+            <div class="carousel-item <%= 'active' if i.zero? %>">
+              <!-- altura menor: troque para ratio-21x9 se quiser ainda mais baixo -->
+              <div class="ratio ratio-16x9">
+                <%= cl_image_tag image.key, class: "d-block w-100 h-100", style: "object-fit: cover;", alt: @product.title %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <button class="carousel-control-prev" type="button"
+                data-bs-target="#carouselExampleRide-<%= @product.id %>" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button"
+                data-bs-target="#carouselExampleRide-<%= @product.id %>" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Próximo</span>
+        </button>
+      </div>
+    </div>
+    </div>
+
+    <div class="product-details-container ms-4 flex-grow-1">
+      <h1><%= @product.title %></h1>
+      <div class="accordion" id="productAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription" aria-expanded="true" aria-controls="collapseDescription">
+              Descrição
+            </button>
+          </h2>
+          <div id="collapseDescription" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#productAccordion">
+            <div class="accordion-body">
+              <%= @product.description %>
             </div>
           </div>
-        <% end %>
+        </div>
       </div>
+      <p>
+        <div class="product-price"><%= humanized_money_with_symbol(@product.price) %></div>
+      </p>
 
-      <button class="carousel-control-prev" type="button"
-              data-bs-target="#carouselExampleRide-<%= @product.id %>" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Anterior</span>
-      </button>
-      <button class="carousel-control-next" type="button"
-              data-bs-target="#carouselExampleRide-<%= @product.id %>" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Próximo</span>
-      </button>
-    </div>
-  </div>
+      <%= form_with url: orders_path, method: :post, local: true, class: "mt-2" do |f| %>
+        <%= hidden_field_tag "order[product_id]", @product.id %>
 
-  <%= form_with url: orders_path, method: :post, local: true, class: "mt-2" do |f| %>
-    <%= hidden_field_tag "order[product_id]", @product.id %>
+        <div class="d-flex flex-wrap gap-2">
+          <p>Tamanhos disponíveis: </p>
+          <% Array(@product.size || @product.size).reject(&:blank?).each_with_index do |t, i| %>
+            <% rid = "p#{@product.id}-size-#{i}" %>
+            <input type="radio"
+                  class="btn-check"
+                  name="order[size]"
+                  id="<%= rid %>"
+                  value="<%= t %>"
+                  autocomplete="off"
+                  required>
+            <label class="btn-size" for="<%= rid %>"><%= t %></label>
+          <% end %>
+        </div>
+      <% end %>
 
-    <div class="d-flex flex-wrap gap-2 justify-content-center">
-      <% Array(@product.size || @product.size).reject(&:blank?).each_with_index do |t, i| %>
-        <% rid = "p#{@product.id}-size-#{i}" %>
-        <input type="radio"
-              class="btn-check"
-              name="order[size]"
-              id="<%= rid %>"
-              value="<%= t %>"
-              autocomplete="off"
-              required>
-        <label class="btn btn-outline-dark btn-sm" for="<%= rid %>"><%= t %></label>
+      <p class="product-last-details">
+        <%= "Category #{@product.category.title}" %>
+      </p>
+       <p class="product-last-details">
+        <%= "SKU: #{@product.sku}" %>
+      </p>
+      <p class="product-last-details">
+        <%= "Created at: #{@product.created_at.strftime("%B %d, %Y")}"%>
+      </p>
+      <p class="product-last-details">
+        <%= "Updated at: #{@product.updated_at.strftime("%B %d, %Y")}" %>
+      </p>
+      <% if @product.user == current_user %>
+        <%= link_to 'Edit', edit_product_path(@product), class: 'btn-edit' %>
+        <%= link_to 'Delete', product_path(@product), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn-delete' %>
+        <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
+      <% else %>
+        <%= form_with url: product_orders_path(@product) do %>
+        <%= hidden_field_tag 'product_id', @product.id %>
+        <%= submit_tag 'Purchase', class: 'btn btn-primary' %>
+        <%= link_to 'Retornar para produtos', products_path, class: 'btn btn-secondary' %>
+        <% end %>
       <% end %>
     </div>
-  <% end %>
-
-  <p>
-    <strong>Created at:</strong>
-    <%= @product.created_at.strftime("%B %d, %Y") %>
-  </p>
-  <p>  <strong>Updated at:</strong>
-    <%= @product.updated_at.strftime("%B %d, %Y") %>
-  </p>
-  <% if @product.user == current_user %>
-    <%= link_to 'Edit', edit_product_path(@product), class: 'btn btn-primary' %>
-    <%= link_to 'Delete', product_path(@product), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-    <%= link_to 'Retornar para produtos', products_path, class: 'btn btn-secondary' %>
-  <% else %>
-    <%= form_with url: product_orders_path(@product) do %>
-    <%= hidden_field_tag 'product_id', @product.id %>
-    <%= submit_tag 'Purchase', class: 'btn btn-primary' %>
-    <%= link_to 'Retornar para produtos', products_path, class: 'btn btn-secondary' %>
-    <% end %>
-  <% end %>
 </div>
