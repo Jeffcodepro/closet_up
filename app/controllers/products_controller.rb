@@ -4,15 +4,16 @@ class ProductsController < ApplicationController
   before_action :authorize_user!, only: %i[edit update destroy]
 
   def index
-    if params[:category_id]
-      @category = Category.find_by(id: params[:category_id])
-      if @category
-        @products = Product.where(category: @category)
-      else
-        redirect_to products_path, alert: "Categoria não encontrada"
-      end
+    @products = Product.all
+    if params[:query].present?
+      @products = Product.search_text(params[:query])
+    end
+    return unless params[:category_id]
+    @category = Category.find_by(id: params[:category_id])
+    if @category
+      @products = Product.where(category: @category)
     else
-      @products = Product.all
+      redirect_to products_path, alert: "Categoria não encontrada"
     end
   end
 

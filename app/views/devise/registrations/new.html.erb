@@ -1,0 +1,82 @@
+<div class="auth-light">
+  <div class="container">
+    <div class="row min-vh-100 align-items-center justify-content-center">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-5">
+        <% if notice.present? || alert.present? %>
+          <div class="mb-3">
+            <% if notice.present? %>
+              <div class="alert alert-success"><%= notice %></div>
+            <% end %>
+            <% if alert.present? %>
+              <div class="alert alert-danger"><%= alert %></div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <div class="card auth-card-light border-0 shadow-sm rounded-4 p-4 p-md-5">
+          <div class="text-center mb-4">
+            <h1 class="h4 mb-1 fw-semibold">Criar conta</h1>
+            <p class="text-secondary m-0">Leva menos de 1 minuto</p>
+          </div>
+
+          <!-- Erros do Devise / Simple Form -->
+          <% if resource.errors.any? %>
+            <div class="alert alert-danger mb-4">
+              <ul class="m-0 ps-3">
+                <% resource.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+            <div class="mb-3">
+              <%= f.input :email,
+                          label: "E-mail",
+                          required: true,
+                          autofocus: true,
+                          input_html: { autocomplete: "email", class: "form-control form-control-lg soft-input" } %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.input :password,
+                          label: "Senha",
+                          required: true,
+                          hint: (content_tag(:span, "#{@minimum_password_length} caracteres no mínimo", class: "text-secondary small") if @minimum_password_length),
+                          input_html: { autocomplete: "new-password", class: "form-control form-control-lg soft-input" } %>
+            </div>
+
+            <div class="mb-2">
+              <%= f.input :password_confirmation,
+                          label: "Confirme a senha",
+                          required: true,
+                          input_html: { autocomplete: "new-password", class: "form-control form-control-lg soft-input" } %>
+            </div>
+
+            <%# Exemplo opcional de Termos de uso/Política (remova se não usar) %>
+            <%#
+            <div class="form-check my-3">
+              <input class="form-check-input" type="checkbox" id="termsCheck" required>
+              <label class="form-check-label text-secondary" for="termsCheck">
+                Concordo com os <a href="#" class="text-decoration-none link-primary-soft">termos de uso</a>.
+              </label>
+            </div>
+            %>
+
+            <div class="d-grid mt-2">
+              <%= f.button :submit, "Criar conta", class: "btn btn-primary btn-lg rounded-pill fw-semibold" %>
+            </div>
+          <% end %>
+
+          <div class="text-center mt-3">
+            <span class="text-secondary small">Já tem conta?</span>
+            <%= link_to " Entrar", new_session_path(resource_name), class: "small fw-semibold text-decoration-none ms-1 link-primary-soft" %>
+          </div>
+        </div>
+
+        <p class="text-center text-light mt-3 small">© <%= Time.current.year %> — Marketplace</p>
+      </div>
+    </div>
+  </div>
+</div>
