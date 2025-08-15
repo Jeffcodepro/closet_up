@@ -1,19 +1,22 @@
 .btn-edit{
   text-decoration: none;
-  background-color: #DD1E73;
-  color: #ffff;
+  background-color: #1EDD88;
+  border-color: #1EDD88;
+  color: #000;
   padding: 10px 20px;
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
 
-.btn-edit:hover {
-  background-color: #b00d5a;
+.btn-edit:hover{
+  background-color: #076038;
+  border-color: #076038;
+  color: #fff
 }
 
 .btn-delete {
   text-decoration: none;
-  background-color: #FF4D4D;
+  background-color: #9e1251;
   color: #ffff;
   padding: 10px 20px;
   border-radius: 5px;
@@ -21,7 +24,7 @@
 }
 
 .btn-delete:hover {
-  background-color: #cc0000;
+  background-color: #2e0213;
 }
 
 .btn-return-to-products {
@@ -52,4 +55,71 @@
 .btn-add-product:hover {
   background-color: #1EDD88;
   color: #000;
+}
+
+.btn-buy-product{
+  text-decoration: none;
+  background-color: #1EDD88;
+  border-color: #1EDD88;
+  color: #000;
+  font-size: 16px;
+  padding: 6px 20px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-buy-product:hover{
+  background-color: #076038;
+  border-color: #076038;
+  color: #fff
+}
+
+.btn-view-product,
+.btn-create-product,
+.btn-product-update,
+.btn-go-to-checkout,
+.btn-view-all-orders {
+  text-decoration: none;
+  text-align: center;
+  background-color: #1EDD88;
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border-color: #1EDD88;
+  border-width: 1px;
+  border-style: solid;
+  transition: background-color 0.3s ease;
+}
+
+.btn-view-product:hover,
+.btn-create-product:hover,
+.btn-product-update:hover,
+.btn-go-to-checkout:hover,
+.btn-view-all-orders:hover {
+  background-color: #076038;
+  border-color: #076038;
+  color: #fff
+}
+
+.btn-order-state {
+  display: inline-block;
+  font-size: 16px;
+  text-decoration: none;
+  background-color: #DD1E73;
+  color: #ffff;
+  padding: 8px 16px;
+  border-radius: 100px;
+}
+
+.btn-order-info {
+  text-decoration: none;
+  background-color: #DD1E73;
+  font-size: 14px;
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 5px;
+  border-color: #DD1E73;
+  border-width: 1px;
+  border-style: solid;
+  transition: background-color 0.3s ease;
 }

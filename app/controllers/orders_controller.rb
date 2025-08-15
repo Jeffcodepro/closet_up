@@ -2,9 +2,22 @@ class OrdersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_order, only: [:show]
 
+  def index
+    @orders = current_user.orders.all
+  end
+
+
   def create
-    product = Product.find(params[:product_id])
-    order  = Order.create(product: product, product_sku: product.sku, amount: product.price, state: 'pending', user: current_user)
+    product = Product.find(params[:order][:product_id])
+
+    order_data = order_params.merge(
+    user: current_user,
+    product: product,
+    product_sku: product.sku,
+    amount: product.price,
+    state: 'pending'
+  )
+    order  = Order.create!(order_data)
 
     session = Stripe::Checkout::Session.create(
       payment_method_types: ['card'],
@@ -36,5 +49,9 @@ class OrdersController < ApplicationController
     @order = current_user.orders.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     redirect_to root_path, alert: "Order not found."
+  end
+
+  def order_params
+    params.require(:order).permit(:product_id, :size, :amount)
   end
 end

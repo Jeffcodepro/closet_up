@@ -14,13 +14,17 @@
 
 
 .product-image-container .carousel,
-.product-image-container .carousel-inner,
-.product-image-container img {
+.product-image-container .carousel-inner
+ {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
+.product-image-container img {
+  max-height: 660px;
+  width: auto;
+}
 
 @media (max-width: 768px) {
   .product-image-container,
@@ -45,4 +49,4 @@
   font-size: 12px;
   line-height: 16px;
   color: #666666;
-  }
+}

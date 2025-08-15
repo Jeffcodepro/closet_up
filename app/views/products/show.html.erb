@@ -20,25 +20,26 @@
         <li class="nav-item">
           <%= link_to "Adicionar Produto", new_product_path, class: "nav-link btn-add-product" %>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center">
           <%= link_to edit_user_registration_path, class: "nav-link text-white" do %>
-          <i class="bi bi-person fs-4"></i>
+            <i class="bi bi-person fs-4"></i>
           <% end %>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center">
           <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "nav-link text-white" %>
         </li>
       <% else %>
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center">
           <%= link_to "Entrar", new_user_session_path, class: "nav-link text-white" %>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center">
           <%= link_to "Criar Conta", new_user_registration_path, class: "nav-link text-white" %>
         </li>
       <% end %>
     </ul>
   </div>
 </nav>
+
 <nav class="navbar navbar-dark bg-secondary">
   <div class="container-fluid">
     <ul class="navbar-nav d-flex flex-row w-100 justify-content-between overflow-auto">
@@ -60,10 +61,7 @@
         <div class="carousel-inner">
           <% @product.images.each_with_index do |image, i| %>
             <div class="carousel-item <%= 'active' if i.zero? %>">
-              <!-- altura menor: troque para ratio-21x9 se quiser ainda mais baixo -->
-              <div class="ratio ratio-16x9">
-                <%= cl_image_tag image.key, class: "d-block w-100 h-100", style: "object-fit: cover;", alt: @product.title %>
-              </div>
+              <%= cl_image_tag image.key, class: "d-block w-100", alt: @product.title, transformation: { width: 600, height: 400, crop: :limit } %>
             </div>
           <% end %>
         </div>
@@ -80,34 +78,50 @@
         </button>
       </div>
     </div>
-    </div>
+  </div>
 
-    <div class="product-details-container ms-4 flex-grow-1">
-      <h1><%= @product.title %></h1>
-      <div class="accordion" id="productAccordion">
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="headingOne">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription" aria-expanded="true" aria-controls="collapseDescription">
-              Descrição
-            </button>
-          </h2>
-          <div id="collapseDescription" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#productAccordion">
-            <div class="accordion-body">
-              <%= @product.description %>
-            </div>
+  <div class="product-details-container ms-4 flex-grow-1">
+    <h1><%= @product.title %></h1>
+
+    <div class="accordion" id="productAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDescription" aria-expanded="true" aria-controls="collapseDescription">
+            Descrição
+          </button>
+        </h2>
+        <div id="collapseDescription" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#productAccordion">
+          <div class="accordion-body">
+            <%= @product.description %>
           </div>
         </div>
       </div>
-      <p>
-        <div class="product-price"><%= humanized_money_with_symbol(@product.price) %></div>
-      </p>
+    </div>
 
-      <%= form_with url: orders_path, method: :post, local: true, class: "mt-2" do |f| %>
-        <%= hidden_field_tag "order[product_id]", @product.id %>
+    <p>
+      <div class="product-price"><%= humanized_money_with_symbol(@product.price) %></div>
+    </p>
 
-        <div class="d-flex flex-wrap gap-2">
-          <p>Tamanhos disponíveis: </p>
-          <% Array(@product.size || @product.size).reject(&:blank?).each_with_index do |t, i| %>
+    <%= form_with url: orders_path, method: :post, local: true, class: "mb-4" do |f| %>
+      <%= hidden_field_tag "order[product_id]", @product.id %>
+
+      <p>Tamanhos disponíveis: </p>
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        <% sizes = Array(@product.size).reject(&:blank?) %>
+        <% if sizes.count == 1 %>
+          <% t = sizes.first %>
+          <% rid = "p#{@product.id}-size-0" %>
+          <input type="radio"
+                  class="btn-check"
+                  name="order[size]"
+                  id="<%= rid %>"
+                  value="<%= t %>"
+                  autocomplete="off"
+                  required
+                  checked>
+          <label class="btn btn-outline-dark btn-sm" for="<%= rid %>"><%= t %></label>
+        <% else %>
+          <% sizes.each_with_index do |t, i| %>
             <% rid = "p#{@product.id}-size-#{i}" %>
             <input type="radio"
                   class="btn-check"
@@ -116,33 +130,32 @@
                   value="<%= t %>"
                   autocomplete="off"
                   required>
-            <label class="btn-size" for="<%= rid %>"><%= t %></label>
+            <label class="btn btn-outline-dark btn-sm" for="<%= rid %>"><%= t %></label>
           <% end %>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
 
-      <p class="product-last-details">
-        <%= "Category #{@product.category.title}" %>
-      </p>
-       <p class="product-last-details">
-        <%= "SKU: #{@product.sku}" %>
-      </p>
-      <p class="product-last-details">
-        <%= "Created at: #{@product.created_at.strftime("%B %d, %Y")}"%>
-      </p>
-      <p class="product-last-details">
-        <%= "Updated at: #{@product.updated_at.strftime("%B %d, %Y")}" %>
-      </p>
       <% if @product.user == current_user %>
-        <%= link_to 'Edit', edit_product_path(@product), class: 'btn-edit' %>
-        <%= link_to 'Delete', product_path(@product), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn-delete' %>
+        <%= link_to 'Editar', edit_product_path(@product), class: 'btn-edit' %>
+        <%= link_to 'Deletar', product_path(@product), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn-delete' %>
         <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
       <% else %>
-        <%= form_with url: product_orders_path(@product) do %>
-        <%= hidden_field_tag 'product_id', @product.id %>
-        <%= submit_tag 'Purchase', class: 'btn btn-primary' %>
-        <%= link_to 'Retornar para produtos', products_path, class: 'btn btn-secondary' %>
-        <% end %>
+        <%= f.submit 'Comprar', class: 'btn-buy-product' %>
+        <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
       <% end %>
-    </div>
+    <% end %>
+
+    <p class="product-last-details">
+      <%= "Category #{@product.category.title}" %>
+    </p>
+    <p class="product-last-details">
+      <%= "SKU: #{@product.sku}" %>
+    </p>
+    <p class="product-last-details">
+      <%= "Created at: #{@product.created_at.strftime("%B %d, %Y")}"%>
+    </p>
+    <p class="product-last-details">
+      <%= "Updated at: #{@product.updated_at.strftime("%B %d, %Y")}" %>
+    </p>
+  </div>
 </div>
