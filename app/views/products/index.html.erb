@@ -4,15 +4,15 @@
     <a class="navbar-brand" href="/">Meu Marketplace</a>
 
     <div class="mx-auto" style="max-width: 500px; width: 100%;">
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Buscar produtos" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">
-          <i class="bi bi-search"></i>
-        </button>
-      </form>
+      <%= form_with url: products_path, method: :get, class: "d-flex" do %>
+        <%= text_field_tag :query, params[:query], class: "form-control me-2",
+              placeholder: "Buscar produtos", aria: { label: "Search" } %>
+        <%= submit_tag "Buscar", class: "btn btn-outline-success" %>
+      <% end %>
     </div>
 
-    <ul class="navbar-nav d-flex flex-row gap-3 ms-auto align-items-center">
+
+    <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
       <% if user_signed_in? %>
         <li class="nav-item">
           <span class="nav-link text-white">Olá, <%= current_user.email %></span>

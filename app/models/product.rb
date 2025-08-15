@@ -16,4 +16,10 @@ class Product < ApplicationRecord
   validates :price, presence: true, numericality: { greater_than: 0 }
   validates :sku, presence: true, uniqueness: true
 
+  include PgSearch::Model
+  pg_search_scope :search_text,
+                  against: { title: 'A',
+                             description: 'B' },
+                  associated_against: { category: :title },
+                  using: { tsearch: { prefix: true } }
 end

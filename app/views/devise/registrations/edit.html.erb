@@ -1,0 +1,97 @@
+<div class="auth-light">
+  <div class="container">
+    <div class="row min-vh-100 align-items-center justify-content-center">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+
+        <% if notice.present? || alert.present? %>
+          <div class="mb-3">
+            <% if notice.present? %>
+              <div class="alert alert-success"><%= notice %></div>
+            <% end %>
+            <% if alert.present? %>
+              <div class="alert alert-danger"><%= alert %></div>
+            <% end %>
+          </div>
+        <% end %>
+
+        <!-- Card: Editar conta -->
+        <div class="card auth-card-light border-0 shadow-sm rounded-4 p-4 p-md-5">
+          <div class="text-center mb-4">
+            <h1 class="h4 mb-1 fw-semibold">Configurações da conta</h1>
+            <p class="text-secondary m-0">Atualize seus dados com segurança</p>
+          </div>
+
+          <% if resource.errors.any? %>
+            <div class="alert alert-danger mb-4">
+              <ul class="m-0 ps-3">
+                <% resource.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+
+          <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+            <div class="mb-3">
+              <%= f.input :email,
+                          label: "E-mail",
+                          required: true,
+                          autofocus: true,
+                          input_html: { autocomplete: "email", class: "form-control form-control-lg soft-input" } %>
+
+              <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                <p class="small text-secondary mt-1">
+                  Aguardando confirmação do novo e-mail:
+                  <strong><%= resource.unconfirmed_email %></strong>
+                </p>
+              <% end %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.input :password,
+                          label: "Nova senha",
+                          required: false,
+                          hint: content_tag(:span, "Deixe em branco para não alterar", class: "text-secondary small"),
+                          input_html: { autocomplete: "new-password", class: "form-control form-control-lg soft-input" } %>
+            </div>
+
+            <div class="mb-3">
+              <%= f.input :password_confirmation,
+                          label: "Confirme a nova senha",
+                          required: false,
+                          input_html: { autocomplete: "new-password", class: "form-control form-control-lg soft-input" } %>
+            </div>
+
+            <div class="mb-2">
+              <%= f.input :current_password,
+                          label: "Senha atual",
+                          required: true,
+                          hint: content_tag(:span, "Necessária para confirmar alterações", class: "text-secondary small"),
+                          input_html: { autocomplete: "current-password", class: "form-control form-control-lg soft-input" } %>
+            </div>
+
+            <div class="d-grid d-sm-flex gap-2 mt-3">
+              <%= f.button :submit, "Salvar alterações", class: "btn btn-primary btn-lg rounded-pill fw-semibold" %>
+              <%= link_to "Cancelar", (request.referer || root_path), class: "btn btn-light btn-lg rounded-pill" %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Card: Cancelar conta -->
+        <div class="shadow-sm rounded-4 p-4 mt-3 mx-3">
+          <h2 class="h6 text-danger mb-2">Encerrar conta</h2>
+          <p class="text-secondary small mb-3">
+            Essa ação é permanente e removerá seus dados associados à conta.
+          </p>
+          <%= button_to "Cancelar minha conta",
+                registration_path(resource_name),
+                method: :delete,
+                data: { turbo_confirm: "Tem certeza que deseja encerrar sua conta?" },
+                class: "btn btn-outline-danger" %>
+        </div>
+
+        <p class="text-center text-light mt-3 small">© <%= Time.current.year %> — Marketplace</p>
+      </div>
+    </div>
+  </div>
+</div>
