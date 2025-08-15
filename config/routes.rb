@@ -18,6 +18,8 @@ Rails.application.routes.draw do
     resources :orders, only: [:show, :create], shallow: true
   end
 
+  resources :orders, only: [:index]
+
   # Payments
   resources :orders, only: [:show, :create] do
     resources :payments, only: :new
