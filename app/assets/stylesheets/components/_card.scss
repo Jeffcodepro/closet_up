@@ -1,33 +1,85 @@
+/* CARD: estrutura geral */
 .card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: none;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  height: 100%;
-  min-height: 380px;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  transition: transform .2s ease, box-shadow .2s ease;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,.05);
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 10px rgba(0,0,0,.15);
 }
 
+
+.card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+.card-media img,
 .card-img-top {
-  height: 50px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
+/* CORPO */
 .card-body {
-  flex: 1;
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
+
+
+.card-title {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.25;
+  min-height: calc(1em * 1.25 * 2);
+  margin-bottom: .25rem;
+}
+
 
 .card-text.description {
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-height: 1.25;
+  min-height: calc(1em * 1.25 * 3);
+  margin-bottom: .5rem;
+}
+
+/* CATEGORIA (se você exibe a categoria logo abaixo) */
+.card-category {
+  opacity: .75;
+  margin-bottom: .5rem;
+}
+
+/* TAMANHOS: mantém a área com altura mínima */
+.card-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  min-height: 40px;             /* reserva espaço mesmo com poucos chips */
+  align-content: flex-start;
+  margin-bottom: .5rem;
+}
+
+/* PREÇO + BOTÃO: fixa no rodapé do card */
+.card-footer,
+.card-actions {                  /* use a classe que você tiver */
+  margin-top: auto;              /* empurra para baixo */
+}
+
+/* Se o botão ficar “saltando”, defina largura total */
+.card-actions .btn {
+  width: 100%;
 }

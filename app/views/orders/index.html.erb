@@ -11,39 +11,19 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-        <div class="mx-auto" style="max-width: 500px; width: 100%;">
-          <form class="d-flex" role="search">
-            <input class="form-control me-2 mt-2" type="search" placeholder="Buscar produtos" aria-label="Search">
-            <button class="btn btn-outline-success mt-2" type="submit">
-              <i class="bi bi-search"></i>
-            </button>
-          </form>
-        </div>
-
-        <ul class="navbar-nav">
-          <% if user_signed_in? %>
-            <li class="nav-item">
-              <%= link_to edit_user_registration_path, class: "nav-link text-white" do %>
-                <i class="bi bi-person fs-4"></i>
-            <% end %>
-
-            <li class="nav-item mt-2">
-              <span class="nav-link text-white">Olá, <%= current_user.email %></span>
-            </li>
-            <li class="nav-item mt-2">
-              <%= link_to "Adicionar Produto", new_product_path, class: "nav-link btn-add-product" %>
-            </li>
-            </li>
-            <li class="nav-item mt-2">
-              <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "nav-link text-white" %>
-            </li>
-          <% else %>
-            <li class="nav-item mt-2">
-              <%= link_to "Entrar", new_user_session_path, class: "nav-link text-white" %>
-            </li>
-            <li class="nav-item">
-              <%= link_to "Criar Conta", new_user_registration_path, class: "nav-link text-white" %>
-            </li>
+    <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
+      <% if user_signed_in? %>
+        <li class="nav-item">
+          <%= link_to orders_path, class: "nav-link text-white" do %>
+            Olá, <%= current_user.email %>
+          <% end %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Adicionar Produto", new_product_path, class: "nav-link btn-add-product" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to edit_user_registration_path, class: "nav-link text-white" do %>
+          <i class="bi bi-person fs-4"></i>
           <% end %>
         </ul>
       </div>
@@ -89,17 +69,35 @@
           </thead>
           <tbody>
             <% @orders.each do |order| %>
+              <% items = order.order_items %>
+              <% first = items.first %>
+              <% extra = [items.size - 1, 0].max %>
+
               <tr>
                 <td>#<%= order.id %></td>
-                <td><%= order.product.title %></td>
-                <td><%= order.size %></td>
-                <td><%= humanized_money_with_symbol order.amount %></td>
+
+                <td>
+                  <%= first&.product&.title || "—" %>
+                  <% if extra > 0 %>
+                    <small class="text-muted">+ <%= extra %> outros</small>
+                  <% end %>
+                </td>
+
+                <td>
+                  <%= items.map(&:size).compact_blank.uniq.join(", ").presence || "-" %>
+                </td>
+
+                <td>
+                  <%= number_to_currency(order.amount_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".") %>
+                </td>
+
                 <td><%= order.state %></td>
-                <td><%= order.created_at.strftime("%d/%m/%Y") %></td>
+                <td><%= l(order.created_at.to_date) %></td>
                 <td><%= link_to 'Ver Detalhes', order_path(order), class: 'btn-order-info' %></td>
               </tr>
             <% end %>
           </tbody>
+
         </table>
       <% end %>
 

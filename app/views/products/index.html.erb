@@ -1,9 +1,53 @@
 
-<div class="banner">
-  <div class="container d-flex flex-column justify-content-center align-items-center h-100 text-white text-center">
-    <h1>Bem-vindo à nossa loja!</h1>
-    <p>As melhores ofertas e produtos de alta qualidade, a um clique de você.</p>
-    <%= link_to "Descubra agora", "#products", class: "btn btn-outline-light mt-3" %>
+
+    <a class="navbar-brand" href="/">Meu Marketplace</a>
+
+    <div class="mx-auto" style="max-width: 500px; width: 100%;">
+      <%= form_with url: products_path, method: :get, class: "d-flex" do %>
+        <%= text_field_tag :query, params[:query], class: "form-control me-2",
+              placeholder: "Buscar produtos", aria: { label: "Search" } %>
+        <%= submit_tag "Buscar", class: "btn btn-outline-success" %>
+      <% end %>
+    </div>
+
+
+    <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
+      <% if user_signed_in? %>
+        <li class="nav-item">
+          <%= link_to orders_path, class: "nav-link text-white" do %>
+            Olá, <%= current_user.email %>
+          <% end %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Adicionar Produto", new_product_path, class: "nav-link btn-add-product" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to edit_user_registration_path, class: "nav-link text-white" do %>
+          <i class="bi bi-person fs-4"></i>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to cart_path, class: "nav-link text-white position-relative" do %>
+            <i class="fa-solid fa-cart-shopping fs-4"></i>
+            <% if defined?(current_order) && current_order && current_order.order_items.any? %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= current_order.order_items.sum(:quantity) %>
+              </span>
+            <% end %>
+          <% end %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "nav-link text-white" %>
+        </li>
+      <% else %>
+        <li class="nav-item">
+          <%= link_to "Entrar", new_user_session_path, class: "nav-link text-white" %>
+        </li>
+        <li class="nav-item">
+          <%= link_to "Criar Conta", new_user_registration_path, class: "nav-link text-white" %>
+        </li>
+      <% end %>
+    </ul>
   </div>
 </div>
 
@@ -57,7 +101,6 @@
                         checked>
                 <label class="btn btn-outline-dark btn-sm" for="<%= rid %>"><%= t %></label>
               <% else %>
-                <% # Caso de múltiplos tamanhos %>
                 <% sizes.each_with_index do |t, i| %>
                   <% rid = "p#{product.id}-size-#{i}" %>
                   <input type="radio"
