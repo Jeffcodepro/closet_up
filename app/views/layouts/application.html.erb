@@ -14,5 +14,28 @@
   <body>
     <%= render "shared/flashes" %>
     <%= yield %>
+    <%= render "shared/navbar" %>
+    <%= render "shared/footer" %>
+
+    <script>
+      // Aguarda 3 segundos (3000 milissegundos) antes de começar a esconder o aviso
+      setTimeout(function() {
+        // Encontra todos os elementos com a classe 'alert'
+        const alerts = document.querySelectorAll('.alert');
+
+        // Itera sobre cada alerta para fazê-lo desaparecer
+        alerts.forEach(function(alert) {
+          // Inicia a transição de opacidade para um fade-out suave
+          alert.style.transition = 'opacity 0.5s ease-out';
+          alert.style.opacity = '0';
+
+          // Após a transição, remove o elemento do DOM para liberar o espaço
+          setTimeout(function() {
+            alert.remove();
+          }, 500); // Aguarda 0.5 segundos (500ms) para remover, igual ao tempo da transição
+        });
+      }, 3000);
+    </script>
+
   </body>
 </html>

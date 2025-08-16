@@ -115,10 +115,10 @@
       <div class="product-price"><%= humanized_money_with_symbol(@product.price) %></div>
     </p>
 
-    <%= form_with url: order_items_path, method: :post, local: true, class: "mb-4" do |f| %> <!-- was: orders_path -->
-    <%= hidden_field_tag :product_id, @product.id %> <!-- was: "order[product_id]" -->
+    <%= form_with url: order_items_path, method: :post, local: true, class: "mb-4" do |f| %>
+    <%= hidden_field_tag :product_id, @product.id %>
 
-    <p>Tamanhos disponíveis: </p>
+      <p>Tamanhos disponíveis: </p>
     <div class="d-flex flex-wrap gap-2 mb-4">
       <% sizes = Array(@product.size).reject(&:blank?) %>
       <% if sizes.count == 1 %>
@@ -134,7 +134,7 @@
                 checked>
         <label class="btn btn-outline-dark btn-sm" for="<%= rid %>"><%= t %></label>
       <% else %>
-        <% sizes.each_with_index do |t, i| %>
+          <% sizes.each_with_index do |t, i| %>
           <% rid = "p#{@product.id}-size-#{i}" %>
           <input type="radio"
                 class="btn-check"
@@ -148,22 +148,42 @@
       <% end %>
     </div>
 
-  <div class="mb-3" style="max-width: 160px;">
-    <label for="quantity" class="form-label">Quantidade</label>
-    <%= number_field_tag :quantity, 1, min: 1, step: 1, class: "form-control", id: "quantity" %>
-  </div>
+    <div class="mb-3" style="max-width: 160px;">
+      <label for="quantity" class="form-label">Quantidade</label>
+      <%= number_field_tag :quantity, 1, min: 1, step: 1, class: "form-control", id: "quantity" %>
+    </div>
 
+    <% if @product.user == current_user %>
+      <%= link_to 'Editar', edit_product_path(@product), class: 'btn-edit' %>
 
-  <% if @product.user == current_user %>
-    <%= link_to 'Editar', edit_product_path(@product), class: 'btn-edit' %>
-    <%= link_to 'Deletar', product_path(@product), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn-delete' %>
-    <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
-  <% else %>
-    <%= submit_tag 'Adicionar ao carrinho', class: 'btn-buy-product' %>
-    <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
-  <% end %>
-<% end %>
+      <button type="button" class="btn-delete" data-bs-toggle="modal" data-bs-target="#deleteConfirmationModal">
+        Deletar
+      </button>
 
+      <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
+    <% else %>
+      <%= submit_tag 'Adicionar ao carrinho', class: 'btn-buy-product' %>
+      <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
+    <% end %>
+    <% end %>
+
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteConfirmationModalLabel">Confirmação de exclusão</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Tem certeza que deseja deletar este produto? Esta ação não pode ser desfeita.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <%= link_to 'Deletar', product_path(@product), data: { turbo_method: :delete }, class: 'btn-delete' %>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <p class="product-last-details">
       <%= "Category #{@product.category.title}" %>

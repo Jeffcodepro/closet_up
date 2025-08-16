@@ -1,3 +1,5 @@
+/* app/assets/stylesheets/_alert.scss */
+
 .alert {
   position: fixed;
   bottom: 16px;
@@ -14,16 +16,19 @@
   box-shadow: 0 0 8px rgba(0,0,0,0.2);
   border-radius: 4px;
   margin: 8px;
-}
 
-.flash-success {
-  border: 2px solid #1EDD88;
-}
+  &.flash-success {
+    border: 2px solid #1EDD88;
+    background-color: #9bfec3;
+  }
 
-.flash-warning {
-  border: 2px solid #FFC65A;
-}
+  &.flash-warning {
+    border: 2px solid #f8be52;
+    background-color: #ffeecf;
+  }
 
-.flash-danger {
-  border: 2px solid #FD1015;
+  &.flash-danger {
+    border: 2px solid #FD1015;
+    background-color: #fcc0c1;
+  }
 }
