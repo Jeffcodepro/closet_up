@@ -6,10 +6,10 @@
         <% if notice.present? || alert.present? %>
           <div class="mb-3">
             <% if notice.present? %>
-              <div class="alert alert-success"><%= notice %></div>
+              <div class="alert flash-success"><%= notice %></div>
             <% end %>
             <% if alert.present? %>
-              <div class="alert alert-danger"><%= alert %></div>
+              <div class="alert flash-danger"><%= alert %></div>
             <% end %>
           </div>
         <% end %>
@@ -22,11 +22,11 @@
           </div>
 
           <% if resource.errors.any? %>
-            <div class="alert alert-danger mb-4">
+            <div class="alert flash-danger">
               <ul class="m-0 ps-3">
                 <% resource.errors.full_messages.each do |msg| %>
                   <li><%= msg %></li>
-                <% end %>
+                <% end %> 
               </ul>
             </div>
           <% end %>

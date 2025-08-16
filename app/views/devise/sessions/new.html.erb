@@ -6,10 +6,10 @@
         <% if notice.present? || alert.present? %>
           <div class="mb-3">
             <% if notice.present? %>
-              <div class="alert alert-success rounded-3"><%= notice %></div>
+              <div class="flash-success"><%= notice %></div>
             <% end %>
             <% if alert.present? %>
-              <div class="alert alert-danger rounded-3"><%= alert %></div>
+              <div class="flash-danger"><%= alert %></div>
             <% end %>
           </div>
         <% end %>
