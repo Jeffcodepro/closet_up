@@ -3,8 +3,8 @@
 puts "🧹 Limpando banco..."
 
 # OrderItem.delete_all if defined?(OrderItem)
+OrderItem.delete_all
 Order.delete_all
-Offer.destroy_all
 Product.destroy_all
 Category.destroy_all
 User.destroy_all
