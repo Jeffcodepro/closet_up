@@ -12,10 +12,15 @@
   </head>
 
   <body>
-    <%= render "shared/flashes" %>
-    <%= yield %>
     <%= render "shared/navbar" %>
-    <%= render "shared/footer" %>
+    <%= render "shared/flashes" %>
+
+    <div class="d-flex flex-column" style="min-height: 100vh;">
+      <div class="flex-grow-1">
+        <%= yield %>
+      </div>
+      <%= render "shared/footer" %>
+    </div>
 
     <script>
       // Aguarda 3 segundos (3000 milissegundos) antes de começar a esconder o aviso

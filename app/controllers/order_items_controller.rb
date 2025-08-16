@@ -19,10 +19,12 @@ class OrderItemsController < ApplicationController
 
   def update
     item = @order.order_items.find(params[:id])
-    qty  = params[:quantity].to_i
 
-    if qty > 0
-      item.update!(quantity: qty)
+    # Acessa a quantidade corretamente usando os strong parameters
+    new_quantity = order_item_params[:quantity].to_i
+
+    if new_quantity > 0
+      item.update!(quantity: new_quantity)
     else
       item.destroy!
     end
@@ -30,6 +32,7 @@ class OrderItemsController < ApplicationController
     @order.recalc_total!
     redirect_to cart_path, notice: "Carrinho atualizado."
   end
+
 
   def destroy
     item = @order.order_items.find(params[:id])
@@ -42,5 +45,9 @@ class OrderItemsController < ApplicationController
 
   def set_order
     @order = current_order
+  end
+
+  def order_item_params
+    params.require(:order_item).permit(:quantity)
   end
 end

@@ -26,9 +26,21 @@
               <%= link_to edit_user_registration_path, class: "nav-link text-white" do %>
                 <i class="bi bi-person fs-4"></i>
             <% end %>
+          <li class="nav-item mt-2">
+          <%= link_to cart_path, class: "nav-link text-white position-relative" do %>
+            <i class="fa-solid fa-cart-shopping fs-"></i>
+            <% if defined?(current_order) && current_order && current_order.order_items.any? %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= current_order.order_items.sum(:quantity) %>
+              </span>
+            <% end %>
+          <% end %>
+        </li>
 
             <li class="nav-item mt-2">
-              <span class="nav-link text-white">Olá, <%= current_user.email %></span>
+              <%= link_to orders_path, class: "nav-link text-white" do %>
+              Olá, <%= current_user.email %>
+              <% end %>
             </li>
             <li class="nav-item mt-2">
               <%= link_to "Adicionar produto", new_product_path, class: "nav-link btn-add-product" %>
