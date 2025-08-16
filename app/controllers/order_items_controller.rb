@@ -1,5 +1,6 @@
 class OrderItemsController < ApplicationController
   before_action :set_order
+  before_action :authenticate_user!
 
   def create
     product  = Product.find(params[:product_id])
