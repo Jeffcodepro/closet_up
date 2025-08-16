@@ -1,4 +1,4 @@
-<div class="category-banner-container">
+<div class="category-banner" style="background-image: url('<%= cl_image_path @category.banner.key %>');">
   <% if @category.banner.attached? %>
     <%= cl_image_tag @category.banner.key, class: "category-banner", alt: "Banner de #{@category.title}" %>
   <% else %>
