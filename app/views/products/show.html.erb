@@ -1,3 +1,4 @@
+
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid d-flex justify-content-between align-items-center w-100 m-3">
 
@@ -66,7 +67,6 @@
     </ul>
   </div>
 </nav>
-
 <div class="container product-show">
   <div class="product-image-container">
     <div class="card h-100">
@@ -145,6 +145,7 @@
                 required>
           <label class="btn btn-outline-dark btn-sm" for="<%= rid %>"><%= t %></label>
         <% end %>
+
       <% end %>
     </div>
 
@@ -162,6 +163,7 @@
 
       <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
     <% else %>
+
       <%= submit_tag 'Adicionar ao carrinho', class: 'btn-buy-product' %>
       <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
     <% end %>
