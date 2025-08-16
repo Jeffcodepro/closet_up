@@ -12,17 +12,29 @@
       </form>
     </div>
 
-    <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
+    <ul class="navbar-nav d-flex flex-row align-items-center gap-3 ms-auto">
       <% if user_signed_in? %>
         <li class="nav-item">
-          <span class="nav-link text-white">Olá, <%= current_user.email %></span>
+          <%= link_to orders_path, class: "nav-link text-white" do %>
+            Olá, <%= current_user.email %>
+          <% end %>
         </li>
-        <li class="nav-item">
+        <li class="nav-item d-flex align-items-center">
           <%= link_to "Adicionar Produto", new_product_path, class: "nav-link btn-add-product" %>
         </li>
         <li class="nav-item d-flex align-items-center">
           <%= link_to edit_user_registration_path, class: "nav-link text-white" do %>
             <i class="bi bi-person fs-4"></i>
+          <% end %>
+        </li>
+        <li class="nav-item d-flex align-items-center position-relative">
+          <%= link_to cart_path, class: "nav-link text-white position-relative" do %>
+            <i class="fa-solid fa-cart-shopping fs-4"></i>
+            <% if defined?(current_order) && current_order && current_order.order_items.any? %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= current_order.order_items.sum(:quantity) %>
+              </span>
+            <% end %>
           <% end %>
         </li>
         <li class="nav-item d-flex align-items-center">
@@ -37,6 +49,7 @@
         </li>
       <% end %>
     </ul>
+
   </div>
 </nav>
 
@@ -102,48 +115,55 @@
       <div class="product-price"><%= humanized_money_with_symbol(@product.price) %></div>
     </p>
 
-    <%= form_with url: orders_path, method: :post, local: true, class: "mb-4" do |f| %>
-      <%= hidden_field_tag "order[product_id]", @product.id %>
+    <%= form_with url: order_items_path, method: :post, local: true, class: "mb-4" do |f| %> <!-- was: orders_path -->
+    <%= hidden_field_tag :product_id, @product.id %> <!-- was: "order[product_id]" -->
 
-      <p>Tamanhos disponíveis: </p>
-      <div class="d-flex flex-wrap gap-2 mb-4">
-        <% sizes = Array(@product.size).reject(&:blank?) %>
-        <% if sizes.count == 1 %>
-          <% t = sizes.first %>
-          <% rid = "p#{@product.id}-size-0" %>
-          <input type="radio"
-                  class="btn-check"
-                  name="order[size]"
-                  id="<%= rid %>"
-                  value="<%= t %>"
-                  autocomplete="off"
-                  required
-                  checked>
-          <label class="btn btn-outline-dark btn-sm" for="<%= rid %>"><%= t %></label>
-        <% else %>
-          <% sizes.each_with_index do |t, i| %>
-            <% rid = "p#{@product.id}-size-#{i}" %>
-            <input type="radio"
-                  class="btn-check"
-                  name="order[size]"
-                  id="<%= rid %>"
-                  value="<%= t %>"
-                  autocomplete="off"
-                  required>
-            <label class="btn btn-outline-dark btn-sm" for="<%= rid %>"><%= t %></label>
-          <% end %>
-        <% end %>
-      </div>
-
-      <% if @product.user == current_user %>
-        <%= link_to 'Editar', edit_product_path(@product), class: 'btn-edit' %>
-        <%= link_to 'Deletar', product_path(@product), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn-delete' %>
-        <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
+    <p>Tamanhos disponíveis: </p>
+    <div class="d-flex flex-wrap gap-2 mb-4">
+      <% sizes = Array(@product.size).reject(&:blank?) %>
+      <% if sizes.count == 1 %>
+        <% t = sizes.first %>
+        <% rid = "p#{@product.id}-size-0" %>
+        <input type="radio"
+                class="btn-check"
+                name="size"
+                id="<%= rid %>"
+                value="<%= t %>"
+                autocomplete="off"
+                required
+                checked>
+        <label class="btn btn-outline-dark btn-sm" for="<%= rid %>"><%= t %></label>
       <% else %>
-        <%= f.submit 'Comprar', class: 'btn-buy-product' %>
-        <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
+        <% sizes.each_with_index do |t, i| %>
+          <% rid = "p#{@product.id}-size-#{i}" %>
+          <input type="radio"
+                class="btn-check"
+                name="size"
+                id="<%= rid %>"
+                value="<%= t %>"
+                autocomplete="off"
+                required>
+          <label class="btn btn-outline-dark btn-sm" for="<%= rid %>"><%= t %></label>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
+
+  <div class="mb-3" style="max-width: 160px;">
+    <label for="quantity" class="form-label">Quantidade</label>
+    <%= number_field_tag :quantity, 1, min: 1, step: 1, class: "form-control", id: "quantity" %>
+  </div>
+
+
+  <% if @product.user == current_user %>
+    <%= link_to 'Editar', edit_product_path(@product), class: 'btn-edit' %>
+    <%= link_to 'Deletar', product_path(@product), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn-delete' %>
+    <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
+  <% else %>
+    <%= submit_tag 'Adicionar ao carrinho', class: 'btn-buy-product' %>
+    <%= link_to 'Retornar para produtos', products_path, class: 'btn-return-to-products' %>
+  <% end %>
+<% end %>
+
 
     <p class="product-last-details">
       <%= "Category #{@product.category.title}" %>

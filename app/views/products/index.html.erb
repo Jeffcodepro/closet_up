@@ -15,7 +15,9 @@
     <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
       <% if user_signed_in? %>
         <li class="nav-item">
-          <span class="nav-link text-white">Olá, <%= current_user.email %></span>
+          <%= link_to orders_path, class: "nav-link text-white" do %>
+            Olá, <%= current_user.email %>
+          <% end %>
         </li>
         <li class="nav-item">
           <%= link_to "Adicionar Produto", new_product_path, class: "nav-link btn-add-product" %>
@@ -23,6 +25,16 @@
         <li class="nav-item">
           <%= link_to edit_user_registration_path, class: "nav-link text-white" do %>
           <i class="bi bi-person fs-4"></i>
+          <% end %>
+        </li>
+        <li>
+          <%= link_to cart_path, class: "nav-link text-white position-relative" do %>
+            <i class="fa-solid fa-cart-shopping fs-4"></i>
+            <% if defined?(current_order) && current_order && current_order.order_items.any? %>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <%= current_order.order_items.sum(:quantity) %>
+              </span>
+            <% end %>
           <% end %>
         </li>
         <li class="nav-item">
@@ -103,7 +115,6 @@
                         checked>
                 <label class="btn btn-outline-dark btn-sm" for="<%= rid %>"><%= t %></label>
               <% else %>
-                <% # Caso de múltiplos tamanhos %>
                 <% sizes.each_with_index do |t, i| %>
                   <% rid = "p#{product.id}-size-#{i}" %>
                   <input type="radio"

@@ -15,7 +15,9 @@
     <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
       <% if user_signed_in? %>
         <li class="nav-item">
-          <span class="nav-link text-white">Olá, <%= current_user.email %></span>
+          <%= link_to orders_path, class: "nav-link text-white" do %>
+            Olá, <%= current_user.email %>
+          <% end %>
         </li>
         <li class="nav-item">
           <%= link_to "Adicionar Produto", new_product_path, class: "nav-link btn-add-product" %>
@@ -62,16 +64,48 @@
         Pedido #<%= @order.id %>
         <small class="btn-order-state"><span><%= @order.state %></span></small>
       </h1>
-      <ul class="list-unstyled">
-        <li><strong>Emitido em</strong> <%= @order.created_at.to_date %></li>
-        <li><strong>Produto</strong> <%= @order.product.title %></li>
-        <li><strong>Tamanho</strong> <%= @order.size %></li>
-        <li><strong>Valor total</strong> <%= humanized_money_with_symbol @order.amount %></li>
-        </li>
-      </ul>
-      <p>Entrega estimada em <strong>2 dias úteis</strong></p>
-    </div>
-  </div>
-    <%= link_to 'Ver todos os pedidos', orders_path, class: 'btn-view-all-orders' %>
-    <%= link_to 'Retornar para produtos', products_path, class: 'btn btn-secondary' %>
+      <ul class="list-unstyled mb-3">
+  <li><strong>Emitido em</strong> <%= l(@order.created_at.to_date) %></li>
+  <li><strong>Status</strong> <%= @order.state %></li>
+</ul>
+
+<table class="table align-middle">
+  <thead class="table-light">
+    <tr>
+      <th>Produto</th>
+      <th>Tam.</th>
+      <th>Qtd</th>
+      <th>Unitário</th>
+      <th>Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @order.order_items.includes(product: { images_attachments: :blob }).each do |item| %>
+      <tr>
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            <% if item.product&.images&.attached? %>
+              <% img = item.product.images.first %>
+              <%= cl_image_tag img.key, width: 40, height: 40, crop: :fill, class: "rounded" %>
+            <% end %>
+            <span><%= item.product&.title || "Produto removido" %></span>
+          </div>
+        </td>
+        <td><%= item.size.presence || "-" %></td>
+        <td><%= item.quantity %></td>
+        <td><%= number_to_currency(item.unit_price_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+        <td><%= number_to_currency(item.line_total_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th colspan="4" class="text-end">Valor total</th>
+      <th><%= number_to_currency(@order.amount_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".") %></th>
+    </tr>
+  </tfoot>
+</table>
+
+<p>Entrega estimada em <strong>2 dias úteis</strong></p>
+
 </div>

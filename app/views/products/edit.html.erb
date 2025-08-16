@@ -15,7 +15,9 @@
     <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
       <% if user_signed_in? %>
         <li class="nav-item">
-          <span class="nav-link text-white">Olá, <%= current_user.email %></span>
+          <%= link_to orders_path, class: "nav-link text-white" do %>
+            Olá, <%= current_user.email %>
+          <% end %>
         </li>
         <li class="nav-item">
           <%= link_to "Adicionar Produto", new_product_path, class: "nav-link btn-add-product" %>

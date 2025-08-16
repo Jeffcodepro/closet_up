@@ -15,7 +15,9 @@
     <ul class="navbar-nav d-flex flex-row gap-3 ms-auto">
       <% if user_signed_in? %>
         <li class="nav-item">
-          <span class="nav-link text-white">Olá, <%= current_user.email %></span>
+          <%= link_to orders_path, class: "nav-link text-white" do %>
+            Olá, <%= current_user.email %>
+          <% end %>
         </li>
         <li class="nav-item">
           <%= link_to "Adicionar Produto", new_product_path, class: "nav-link btn-add-product" %>
@@ -56,28 +58,80 @@
 
 <div class="container">
   <div class="row py-4 g-4">
-    <div class="col-md-4 d-flex justify-content-center align-items-center">
-      <% if @order.product.images.attached? %>
-        <%= cl_image_tag @order.product.images.first.key, class: "img-fluid rounded shadow-sm" %>
-      <% end %>
+
+    <!-- ESQUERDA: Resumo (tabela com TODOS os itens) -->
+    <div class="col-md-7">
+      <h1 class="h4 mb-3">Resumo do Pedido</h1>
+
+      <table class="table align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Produto</th>
+            <th>Tam.</th>
+            <th>Qtd</th>
+            <th>Unitário</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @items.each do |item| %>
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <% if item.product.images.attached? %>
+                    <% img = item.product.images.first %>
+                    <%= cl_image_tag img.key, width: 40, height: 40, crop: :fill, class: "rounded" %>
+                  <% end %>
+                  <span><%= item.product.title %></span>
+                </div>
+              </td>
+              <td><%= item.size.presence || "-" %></td>
+              <td><%= item.quantity %></td>
+              <td><%= number_to_currency(item.unit_price_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+              <td><%= number_to_currency(item.line_total_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="4" class="text-end">Total</th>
+            <th><%= number_to_currency(@order.amount_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".") %></th>
+          </tr>
+        </tfoot>
+      </table>
     </div>
 
-    <div class="col-md-8">
-      <h1>Resumo do Pedido</h1>
-      <p>Compra de produto <strong><%= @order.product.title %></strong> por <strong><%= humanized_money_with_symbol @order.amount %></strong> no tamanho de <strong><%= @order.size %></strong></p>
+    <!-- DIREITA: Infos e botão de pagamento -->
+    <div class="col-md-5 mt-4">
+      <h2 class="h4 mb-3">Informações da Compra</h2>
 
-      <button id="pay" class="btn-go-to-checkout">Finalizar a compra</button>
+      <ul class="list-unstyled mb-3">
+        <li class="d-flex justify-content-between">
+          <span>Itens</span>
+          <strong><%= @items.to_a.sum(&:quantity) %></strong>
+        </li>
+        <li class="d-flex justify-content-between">
+          <span>Total</span>
+          <strong><%= number_to_currency(@order.amount_cents / 100.0, unit: "R$ ", separator: ",", delimiter: ".") %></strong>
+        </li>
+      </ul>
+
+      <button id="pay" class="btn-buy-product w-100">Finalizar a compra</button>
 
       <script src="https://js.stripe.com/v3/"></script>
       <script>
-        const paymentButton = document.getElementById('pay');
-        paymentButton.addEventListener('click', () => {
-          const stripe = Stripe('<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>');
-          stripe.redirectToCheckout({
-            sessionId: '<%= @order.checkout_session_id %>'
+        document.addEventListener('turbo:load', setupStripe);
+        document.addEventListener('DOMContentLoaded', setupStripe);
+        function setupStripe() {
+          const btn = document.getElementById('pay');
+          if (!btn) return;
+          btn.addEventListener('click', () => {
+            const stripe = Stripe('<%= ENV['STRIPE_PUBLISHABLE_KEY'] %>');
+            stripe.redirectToCheckout({ sessionId: '<%= @order.checkout_session_id %>' });
           });
-        });
+        }
       </script>
     </div>
+
   </div>
 </div>
