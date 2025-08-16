@@ -40,8 +40,12 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    @product.destroy
-    redirect_to products_path, notice: "Produto excluído com sucesso."
+    if @product.orders.exists?
+      redirect_to product_path(@product), alert: "Não é possível deletar este produto, pois ele já tem pedidos associados."
+    else
+      @product.destroy
+      redirect_to products_path, notice: "Produto deletado com sucesso."
+    end
   end
 
   def update

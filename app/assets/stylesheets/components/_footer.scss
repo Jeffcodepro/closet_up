@@ -1,0 +1,28 @@
+.footer h5{
+  font-size: 14px;
+  color: #acacac;
+}
+
+.footer ul,
+.footer-copy{
+  font-size: 12px;
+  color: #acacac;
+}
+
+.footer-list{
+  text-decoration: none;
+  font-size: 12px;
+  color: #acacac;
+  transition: color 0.3s ease;
+}
+
+.footer-icons {
+  color: #acacac;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-list:hover,
+.footer-icons:hover {
+  color: #ffffff;
+}

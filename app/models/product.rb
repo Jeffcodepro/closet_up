@@ -2,6 +2,8 @@ class Product < ApplicationRecord
   belongs_to :category
   belongs_to :user
 
+  has_many :orders
+
   SIZES = %w[PP P M G GG XG].freeze
 
   monetize :price_cents
