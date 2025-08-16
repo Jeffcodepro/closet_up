@@ -1,0 +1,19 @@
+<div class="category-banner-container">
+  <% if @category.banner.attached? %>
+    <%= cl_image_tag @category.banner.key, class: "category-banner", alt: "Banner de #{@category.title}" %>
+  <% else %>
+    <%= image_tag "default_category_banner.png", class: "category-banner" %>
+  <% end %>
+</div>
+
+<div class="container mt-4">
+  <h1 class="text-center"><%= @category.title %></h1>
+
+  <div class="row">
+    <% @products.each do |product| %>
+      <div class="col-md-4 mb-4">
+        <%= render partial: "products/product_card", locals: { product: product } %>
+      </div>
+    <% end %>
+  </div>
+</div>

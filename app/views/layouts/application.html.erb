@@ -14,54 +14,9 @@
   <body>
     <%= render "shared/flashes" %>
     <%= yield %>
+    <%= render "shared/navbar" %>
+    <%= render "shared/footer" %>
 
-      <footer class="footer bg-dark text-white py-4 mt-5">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-4">
-              <h5>Navegação</h5>
-              <ul class="list-unstyled">
-                <li><%= link_to "Início", root_path, class: "footer-list" %></li>
-                <li><%= link_to "Produtos", products_path, class: "footer-list" %></li>
-                <li><%= link_to "Minha Conta", edit_user_registration_path, class: "footer-list" %></li>
-              </ul>
-            </div>
-
-            <div class="col-md-4">
-              <h5>Contato</h5>
-              <ul class="list-unstyled">
-                <li>Email: contato@marketplace.com</li>
-                <li>Telefone: (00) 1234-5678</li>
-              </ul>
-            </div>
-
-            <div class="col-md-4">
-              <h5>Siga-nos</h5>
-              <ul class="list-inline">
-                <li class="list-inline-item">
-                  <a href="#" class="footer-icons">
-                    <i class="bi bi-facebook" style="font-size: 1rem;"></i>
-                  </a>
-                </li>
-                <li class="list-inline-item">
-                  <a href="#" class="footer-icons">
-                    <i class="bi bi-instagram" style="font-size: 1rem;"></i>
-                  </a>
-                </li>
-                <li class="list-inline-item">
-                  <a href="#" class="footer-icons">
-                    <i class="bi bi-twitter" style="font-size: 1rem;"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <hr class="bg-secondary">
-          <div class="text-center text-secondary footer-copy">
-            <p class="footer-copy">&copy; <%= Time.now.year %> ClosetUp. Todos os direitos reservados.</p>
-          </div>
-        </div>
-    </footer>
     <script>
       // Aguarda 3 segundos (3000 milissegundos) antes de começar a esconder o aviso
       setTimeout(function() {
