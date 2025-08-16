@@ -17,7 +17,7 @@ class OrdersController < ApplicationController
     amount: product.price,
     state: 'pending'
   )
-    order  = Order.create!(order_data)
+    order  = Order.create(order_data)
 
     session = Stripe::Checkout::Session.create(
       payment_method_types: ['card'],
